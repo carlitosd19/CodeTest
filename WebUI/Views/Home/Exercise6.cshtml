@@ -1,0 +1,103 @@
+﻿@{
+    ViewBag.Title = "Exercise6";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Exercise 6</h1>
+                <p class="lead">
+                    Please implement a function that checks whether a positive number is a palindrome or not.
+                </p>
+                <p class="text-warning"> For example, 121 is a palindrome, but 123 is not.</p>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <form id="frmIspalindrome">
+                    <div class="form-group">
+                        <label class="col-form-label col-form-label-lg" for="inputLarge">Check is Value is Palindrome</label>
+
+                        <input id="txtparameter" name="txtparameter" data-rule-atLeastOneChar="true" type="text" class="form-control form-control-lg">
+
+                        <div id="lblMessage" class="valid-feedback"></div>
+                        <div id="lblErrorMsg" class="invalid-feedback"></div>
+                    </div>
+                    @*@Html.AntiForgeryToken()*@
+                    <button id="btnCheckIsPalindrome" type="button" class="btn btn-primary">Check Value</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            var txtxParam = $("#txtparameter").val();
+            $('#btnCheckIsPalindrome').on("click",
+                function() {
+                    var txtxParam = $("#txtparameter").val();
+
+                    if ($('#txtparameter').val().length === 0) {
+                        $('#txtparameter').focus();
+                        $('#lblErrorMsg').html("Error : An error occured, please you must provide a value");
+                        $('#lblErrorMsg').show();
+                        toastr.error("Error : An error occured, please you must provide a value");
+                    } else {
+                        $('#lblErrorMsg').hide();
+                        $.ajax({
+                                type: "GET",
+                                url: '/api/CodeTestAPI/Ispalindrome/' + txtxParam,
+                                datatype: 'json',
+                                cache: false
+                            })
+                            .success(function(data) {
+                                if (data != null) {
+                                    var Output = "<hr />";
+                                    if (data.ispal === true) {
+                                        Output += "<b>The Value " +
+                                            "<strong>" +
+                                            txtxParam +
+                                            "</strong>" +
+                                            " is Palindrome : </b>";
+                                        $('#lblMessage').html(Output);
+                                        $('#lblMessage').show();
+                                        toastr.success("<b>The Value " +
+                                            "<strong>" +
+                                            txtxParam +
+                                            "</strong>" +
+                                            " is Palindrome : </b>");
+                                    } else {
+                                        Output += "<b>The Value " +
+                                            "<strong>" +
+                                            txtxParam +
+                                            "</strong>" +
+                                            " is NOT Palindrome  </b>";
+                                        $('#lblMessage').html(Output);
+                                        $('#lblMessage').show();
+                                        toastr.success("<b>The Value " +
+                                            "<strong>" +
+                                            txtxParam +
+                                            "</strong>" +
+                                            " is NOT Palindrome  </b>");
+                                    }
+
+                                } else {
+                                    $('#lblMessage').html("No records found.");
+                                    $('#lblMessage').show();
+                                }
+                            })
+                            .error(function(xhr, ajaxOptions, thrownError) {
+                                $('#lblMessage').html("Error : An error occured");
+                                $('#lblMessage').show();
+                                toastr.error("Error : An error occured");
+                            });
+                    }
+                });
+        });
+    </script>
+}
