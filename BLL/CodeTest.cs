@@ -21,7 +21,7 @@ namespace BLL
             return inputText == reverseText;
         }
 
-        public static bool IsPalindromeRecursive(string text)
+        public bool IsPalindromeRecursive(string text)
         {
             if (text.Length <= 1)
                 return true;
