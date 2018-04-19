@@ -20,5 +20,15 @@ namespace BLL
             //compare the strings
             return inputText == reverseText;
         }
+
+        public static bool IsPalindromeRecursive(string text)
+        {
+            if (text.Length <= 1)
+                return true;
+            if (text[0] != text[text.Length - 1])
+                return false;
+            else
+                return IsPalindromeRecursive(text.Substring(1, text.Length - 2));
+        }
     }
 }
